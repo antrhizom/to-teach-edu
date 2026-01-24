@@ -105,31 +105,30 @@ export async function registerParticipant(
  */
 export async function loginParticipantWithCode(code: string): Promise<User> {
   try {
+    // Import Firestore functions
+    const { collection, query, where, getDocs } = await import('firebase/firestore');
+    
     // 1. Finde User mit diesem Code in Firestore
-    const usersRef = db.collection ? db.collection('users') : null;
-    if (!usersRef) {
-      // Fallback für neue Firestore API
-      const { collection, query, where, getDocs } = await import('firebase/firestore');
-      const q = query(collection(db, 'users'), where('code', '==', code.toUpperCase()));
-      const querySnapshot = await getDocs(q);
-      
-      if (querySnapshot.empty) {
-        throw new Error('Code nicht gefunden');
-      }
-      
-      const userDoc = querySnapshot.docs[0];
-      const userData = userDoc.data() as User;
-      
-      // 2. Login mit virtueller Email + Code
-      await signInWithEmailAndPassword(auth, userData.email, code.toUpperCase());
-      
-      return {
-        userId: userDoc.id,
-        ...userData
-      };
+    const q = query(
+      collection(db, 'users'), 
+      where('code', '==', code.toUpperCase())
+    );
+    const querySnapshot = await getDocs(q);
+    
+    if (querySnapshot.empty) {
+      throw new Error('Code nicht gefunden');
     }
     
-    throw new Error('Firestore nicht verfügbar');
+    const userDoc = querySnapshot.docs[0];
+    const userData = userDoc.data() as User;
+    
+    // 2. Login mit virtueller Email + Code
+    await signInWithEmailAndPassword(auth, userData.email, code.toUpperCase());
+    
+    return {
+      userId: userDoc.id,
+      ...userData
+    };
   } catch (error: any) {
     console.error('Login error:', error);
     
