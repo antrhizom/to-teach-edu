@@ -120,15 +120,15 @@ export async function loginParticipantWithCode(code: string): Promise<User> {
     }
     
     const userDoc = querySnapshot.docs[0];
-    const userData = userDoc.data() as User;
+    const userData = userDoc.data();
     
     // 2. Login mit virtueller Email + Code
     await signInWithEmailAndPassword(auth, userData.email, code.toUpperCase());
     
     return {
-      userId: userDoc.id,
-      ...userData
-    };
+      ...userData,
+      userId: userDoc.id
+    } as User;
   } catch (error: any) {
     console.error('Login error:', error);
     
