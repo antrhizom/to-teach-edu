@@ -11,11 +11,14 @@ export interface User {
   username: string;
   group: Group;
   code: string;
-  email: string; // Virtuelle oder echte Email
-  isVirtual?: boolean; // Flag für virtuelle Teilnehmer
+  email: string;
+  isVirtual?: boolean;
   createdAt: string;
   completedSubtasks: Record<string, string>;
   ratings: Record<number, TaskRating>;
+  certificateIssued?: boolean;
+  certificateIssuedAt?: string;
+  finalRank?: number;
 }
 
 export interface TaskRating {
@@ -65,4 +68,22 @@ export interface RatingOption {
   label: string;
   emoji: string;
   color: string;
+}
+
+export interface Certificate {
+  userId: string;
+  username: string;
+  group: Group;
+  rank: number;
+  totalParticipants: number;
+  completionPercentage: number;
+  tasksCompleted: number;
+  totalTasks: number;
+  issuedAt: string;
+  issuedBy: string;
+}
+
+export interface AdminSettings {
+  certificatesEnabled: boolean;
+  certificatesIssuedAt?: string;
 }
