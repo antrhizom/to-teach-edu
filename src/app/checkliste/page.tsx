@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { getCurrentUser, getUserData } from '@/lib/auth';
 import { updateUserSubtasks, updateUserRatings } from '@/lib/firestore';
-import { User } from '@/types';
+import { User, TaskRating } from '@/types';
 import { GROUPS, TASKS, RATING_QUESTIONS, RATING_OPTIONS } from '@/lib/constants';
 import Navigation from '@/components/Navigation';
 import { ExternalLink } from 'lucide-react';
@@ -66,12 +66,17 @@ export default function ChecklistePage() {
   const submitRating = async () => {
     if (!user || showRatingModal === null) return;
 
+    // Ensure all rating fields exist
+    const ratingData: TaskRating = {
+      enjoyed: tempRating['enjoyed'] ?? 0,
+      useful: tempRating['useful'] ?? 0,
+      learned: tempRating['learned'] ?? 0,
+      timestamp: new Date().toISOString()
+    };
+
     const newRatings = {
       ...user.ratings,
-      [showRatingModal]: {
-        ...tempRating,
-        timestamp: new Date().toISOString()
-      }
+      [showRatingModal]: ratingData
     };
 
     setUser({ ...user, ratings: newRatings });
