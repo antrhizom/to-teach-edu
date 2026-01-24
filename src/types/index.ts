@@ -32,6 +32,7 @@ export interface Task {
   lionColor: string;
   lionEmoji: string;
   subtasks: string[];
+  pdfUrl?: string;
   pdfId?: string;
   whiteboardUrl?: string;
   padletUrl?: string;

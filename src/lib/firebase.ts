@@ -3,7 +3,6 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 
-// ⚠️ WICHTIG: Ersetze diese Werte mit deiner Firebase-Konfiguration!
 const firebaseConfig = {
   apiKey: "AIzaSyACZvcT_03XaWKP0qKrZFZoIKILx5-lZps",
   authDomain: "toteach-edu.firebaseapp.com",
