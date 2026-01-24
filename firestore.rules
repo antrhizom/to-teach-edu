@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ==================== USER COLLECTION ====================
+    match /users/{userId} {
+      // Jeder kann User-Daten lesen (für Statistik)
+      allow read: if true;
+      
+      // Neue User können erstellt werden
+      allow create: if request.resource.data.keys().hasAll(['username', 'group', 'code', 'createdAt'])
+                    && request.resource.data.username is string
+                    && request.resource.data.username.size() > 0
+                    && request.resource.data.username.size() <= 30
+                    && request.resource.data.group in ['nilpferde', 'ameise', 'schildkroeten', 'drachen', 'kuehe']
+                    && request.resource.data.code is string
+                    && request.resource.data.code.size() == 6;
+      
+      // User können ihre eigenen Daten updaten (mit Code-Verifizierung)
+      allow update: if resource.data.code == request.resource.data.code;
+      
+      // User können gelöscht werden (für Admin-Funktion)
+      allow delete: if true;
+    }
+    
+    // ==================== COMMENTS COLLECTION ====================
+    match /comments/{commentId} {
+      // Jeder kann Kommentare lesen
+      allow read: if true;
+      
+      // Jeder kann neue Kommentare erstellen
+      allow create: if request.resource.data.keys().hasAll(['userId', 'username', 'group', 'text', 'timestamp'])
+                    && request.resource.data.text is string
+                    && request.resource.data.text.size() > 0
+                    && request.resource.data.text.size() <= 500;
+      
+      // Kommentare können gelöscht werden
+      allow delete: if true;
+      
+      // Kommentare können nicht bearbeitet werden
+      allow update: if false;
+    }
+    
+    // ==================== PDFS COLLECTION ====================
+    match /pdfs/{taskId} {
+      // Jeder kann PDF-Daten lesen
+      allow read: if true;
+      
+      // PDFs können erstellt und aktualisiert werden
+      allow write: if request.resource.data.keys().hasAll(['fileName', 'url', 'uploadedAt', 'taskId']);
+      
+      // PDFs können gelöscht werden
+      allow delete: if true;
+    }
+  }
+}

@@ -11,6 +11,8 @@ export interface User {
   username: string;
   group: Group;
   code: string;
+  email: string; // Virtuelle oder echte Email
+  isVirtual?: boolean; // Flag für virtuelle Teilnehmer
   createdAt: string;
   completedSubtasks: Record<string, string>;
   ratings: Record<number, TaskRating>;

@@ -1,0 +1,79 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ==================== HELPER FUNCTIONS ====================
+    
+    // Prüft ob User eingeloggt ist
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    // Prüft ob User der Owner ist
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    // Prüft ob User Admin ist (Custom Claims)
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.admin == true;
+    }
+    
+    // ==================== USER COLLECTION ====================
+    match /users/{userId} {
+      // Alle eingeloggten User können User-Daten lesen (für Statistik)
+      allow read: if isSignedIn();
+      
+      // User erstellen: Nur wenn UID matched
+      allow create: if isSignedIn() 
+                    && request.auth.uid == userId
+                    && request.resource.data.keys().hasAll(['username', 'group', 'code', 'email', 'createdAt'])
+                    && request.resource.data.username is string
+                    && request.resource.data.username.size() > 0
+                    && request.resource.data.username.size() <= 30
+                    && request.resource.data.group in ['nilpferde', 'ameise', 'schildkroeten', 'drachen', 'kuehe']
+                    && request.resource.data.code is string
+                    && request.resource.data.code.size() == 6;
+      
+      // User updaten: Nur eigene Daten oder Admin
+      allow update: if isOwner(userId) || isAdmin();
+      
+      // User löschen: Nur Admin
+      allow delete: if isAdmin();
+    }
+    
+    // ==================== COMMENTS COLLECTION ====================
+    match /comments/{commentId} {
+      // Alle eingeloggten User können Kommentare lesen
+      allow read: if isSignedIn();
+      
+      // Jeder eingeloggte User kann Kommentare erstellen
+      allow create: if isSignedIn()
+                    && request.resource.data.keys().hasAll(['userId', 'username', 'group', 'text', 'timestamp'])
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.text is string
+                    && request.resource.data.text.size() > 0
+                    && request.resource.data.text.size() <= 500;
+      
+      // Kommentare können gelöscht werden vom Owner oder Admin
+      allow delete: if isAdmin() || 
+                      (isSignedIn() && resource.data.userId == request.auth.uid);
+      
+      // Kommentare können nicht bearbeitet werden
+      allow update: if false;
+    }
+    
+    // ==================== PDFS COLLECTION ====================
+    match /pdfs/{taskId} {
+      // Alle eingeloggten User können PDF-Daten lesen
+      allow read: if isSignedIn();
+      
+      // Nur Admin kann PDFs hochladen/ändern
+      allow write: if isAdmin()
+                   && request.resource.data.keys().hasAll(['fileName', 'url', 'uploadedAt', 'taskId']);
+      
+      // Nur Admin kann PDFs löschen
+      allow delete: if isAdmin();
+    }
+  }
+}
