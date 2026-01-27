@@ -202,7 +202,7 @@ export default function ChecklistePage() {
                 </div>
 
                 {/* External Links */}
-                {(task.whiteboardUrl || task.padletUrl || task.pdfUrl) && (
+                {(task.whiteboardUrl || task.padletUrl || task.padletUrlEBA || task.padletUrlEFZ || task.pdfUrl) && (
                   <div className="mt-4 pt-4 border-t border-gray-200 flex gap-3 flex-wrap">
                     {task.pdfUrl && (
                       <a
@@ -235,6 +235,28 @@ export default function ChecklistePage() {
                       >
                         <ExternalLink className="w-4 h-4" />
                         Padlet
+                      </a>
+                    )}
+                    {task.padletUrlEBA && (
+                      <a
+                        href={task.padletUrlEBA}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-colors"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        Padlet EBA
+                      </a>
+                    )}
+                    {task.padletUrlEFZ && (
+                      <a
+                        href={task.padletUrlEFZ}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        Padlet EFZ
                       </a>
                     )}
                   </div>

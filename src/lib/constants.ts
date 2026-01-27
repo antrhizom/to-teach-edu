@@ -109,7 +109,8 @@ export const TASKS: Task[] = [
       'Entscheid in der Gruppe, welche Links auf das Padlet kommen', 
       'Mindestens fünf Links mit Begründung'
     ],
-    padletUrl: 'https://example.com/padlet',
+    padletUrlEBA: 'https://padlet.com/DLHOrganisation/unsere-to-teach-wand-eba-rnt6ksnune532gbl',
+    padletUrlEFZ: 'https://padlet.com/DLHOrganisation/unsere-to-teach-wand-efz-y1dnbn9a2todhlo1',
     pdfId: 'task8' 
   }
 ];
