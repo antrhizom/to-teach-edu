@@ -202,11 +202,11 @@ export default function ChecklistePage() {
                 </div>
 
                 {/* External Links */}
-                {(task.whiteboardUrl || task.padletUrl || task.padletUrlEBA || task.padletUrlEFZ || task.pdfUrl) && (
+                {(task.whiteboardUrl || task.padletUrl || task.padletUrlEBA || task.padletUrlEFZ || task.pdfUrl || task.pdfId) && (
                   <div className="mt-4 pt-4 border-t border-gray-200 flex gap-3 flex-wrap">
-                    {task.pdfUrl && (
+                    {(task.pdfUrl || task.pdfId) && (
                       <a
-                        href={task.pdfUrl}
+                        href={task.pdfUrl || `/pdfs/${task.pdfId}.pdf`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors"
