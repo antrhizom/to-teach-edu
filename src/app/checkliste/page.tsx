@@ -202,7 +202,7 @@ export default function ChecklistePage() {
                 </div>
 
                 {/* External Links */}
-                {(task.whiteboardUrl || task.padletUrl || task.padletUrlEBA || task.padletUrlEFZ || task.pdfUrl || task.pdfId) && (
+                {(task.whiteboardUrl || task.padletUrl || task.padletUrlEFZ3 || task.padletUrlEFZ4 || task.pdfUrl || task.pdfId) && (
                   <div className="mt-4 pt-4 border-t border-gray-200 flex gap-3 flex-wrap">
                     {(task.pdfUrl || task.pdfId) && (
                       <a
@@ -237,26 +237,26 @@ export default function ChecklistePage() {
                         Padlet
                       </a>
                     )}
-                    {task.padletUrlEBA && (
+                    {task.padletUrlEFZ3 && (
                       <a
-                        href={task.padletUrlEBA}
+                        href={task.padletUrlEFZ3}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors"
                       >
                         <ExternalLink className="w-4 h-4" />
-                        Padlet EBA
+                        EFZ 3-jährig
                       </a>
                     )}
-                    {task.padletUrlEFZ && (
+                    {task.padletUrlEFZ4 && (
                       <a
-                        href={task.padletUrlEFZ}
+                        href={task.padletUrlEFZ4}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors"
                       >
                         <ExternalLink className="w-4 h-4" />
-                        Padlet EFZ
+                        EFZ 4-jährig
                       </a>
                     )}
                   </div>

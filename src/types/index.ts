@@ -39,8 +39,8 @@ export interface Task {
   pdfId?: string;
   whiteboardUrl?: string;
   padletUrl?: string;
-  padletUrlEBA?: string;
-  padletUrlEFZ?: string;
+  padletUrlEFZ3?: string;
+  padletUrlEFZ4?: string;
 }
 
 export interface Comment {
