@@ -3,7 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { getCurrentUser, checkIsAdmin } from '@/lib/auth';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { checkIsAdmin } from '@/lib/auth';
 import { getAllUsers, deleteUser, resetUserProgress, exportAllData } from '@/lib/firestore';
 import { User } from '@/types';
 import { GROUPS, TASKS } from '@/lib/constants';
@@ -17,10 +19,10 @@ export default function AdminPage() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const currentUser = getCurrentUser();
-      if (!currentUser) {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (!firebaseUser) {
         router.push('/login?mode=admin');
+        setLoading(false);
         return;
       }
 
@@ -28,6 +30,7 @@ export default function AdminPage() {
       if (!adminStatus) {
         alert('Keine Admin-Berechtigung!');
         router.push('/');
+        setLoading(false);
         return;
       }
 
@@ -35,9 +38,9 @@ export default function AdminPage() {
       const users = await getAllUsers();
       setAllUsers(users);
       setLoading(false);
-    };
+    });
 
-    checkAuth();
+    return () => unsubscribe();
   }, [router]);
 
   const handleDeleteUser = async (userId: string, username: string) => {

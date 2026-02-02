@@ -3,7 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { getCurrentUser, getUserData } from '@/lib/auth';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { getUserData } from '@/lib/auth';
 import { getAllUsers } from '@/lib/firestore';
 import { User } from '@/types';
 import { GROUPS, TASKS, RATING_QUESTIONS, RATING_OPTIONS } from '@/lib/constants';
@@ -18,24 +20,24 @@ export default function StatistikPage() {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadData = async () => {
-      const currentUser = getCurrentUser();
-      if (!currentUser) {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (!firebaseUser) {
         router.push('/login');
+        setLoading(false);
         return;
       }
 
       const [userData, users] = await Promise.all([
-        getUserData(currentUser.uid),
+        getUserData(firebaseUser.uid),
         getAllUsers()
       ]);
 
       if (userData) setUser(userData);
       setAllUsers(users);
       setLoading(false);
-    };
+    });
 
-    loadData();
+    return () => unsubscribe();
   }, [router]);
 
   if (loading) {

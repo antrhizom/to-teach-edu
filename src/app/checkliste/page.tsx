@@ -3,7 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { getCurrentUser, getUserData } from '@/lib/auth';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { getUserData } from '@/lib/auth';
 import { updateUserSubtasks, updateUserRatings } from '@/lib/firestore';
 import { User, TaskRating } from '@/types';
 import { GROUPS, TASKS, RATING_QUESTIONS, RATING_OPTIONS } from '@/lib/constants';
@@ -18,21 +20,22 @@ export default function ChecklistePage() {
   const [tempRating, setTempRating] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const currentUser = getCurrentUser();
-      if (!currentUser) {
+    // Auth State Listener - wartet auf Firebase Auth Initialisierung
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (!firebaseUser) {
         router.push('/login');
+        setLoading(false);
         return;
       }
 
-      const userData = await getUserData(currentUser.uid);
+      const userData = await getUserData(firebaseUser.uid);
       if (userData) {
         setUser(userData);
       }
       setLoading(false);
-    };
+    });
 
-    checkAuth();
+    return () => unsubscribe();
   }, [router]);
 
   const toggleSubtask = async (taskId: number, subtaskIndex: number) => {

@@ -3,7 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { getCurrentUser, getUserData } from '@/lib/auth';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { getUserData } from '@/lib/auth';
 import { createComment, getAllComments, deleteComment } from '@/lib/firestore';
 import { User, Comment } from '@/types';
 import { GROUPS } from '@/lib/constants';
@@ -19,24 +21,24 @@ export default function PinnwandPage() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    const loadData = async () => {
-      const currentUser = getCurrentUser();
-      if (!currentUser) {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (!firebaseUser) {
         router.push('/login');
+        setLoading(false);
         return;
       }
 
       const [userData, commentsData] = await Promise.all([
-        getUserData(currentUser.uid),
+        getUserData(firebaseUser.uid),
         getAllComments()
       ]);
 
       if (userData) setUser(userData);
       setComments(commentsData);
       setLoading(false);
-    };
+    });
 
-    loadData();
+    return () => unsubscribe();
   }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
