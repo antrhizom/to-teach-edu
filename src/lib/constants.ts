@@ -11,42 +11,45 @@ export const GROUPS: Record<string, GroupInfo> = {
 };
 
 export const TASKS: Task[] = [
-  { 
-    id: 1, 
-    title: 'Ein KI-Chatbot steht zur Verfügung', 
-    type: 'individual', 
-    lionColor: 'red', 
+  {
+    id: 1,
+    title: 'Ein KI-Chatbot steht zur Verfügung',
+    type: 'individual',
+    lionColor: 'red',
     lionEmoji: '🦁',
     subtasks: [
-      'Ich habe Zugriff auf den KI-Chat von Microsoft', 
+      'Ich habe Zugriff auf den KI-Chat von Microsoft',
       'Ich weiss, dass ich den Input genau definieren muss'
     ],
-    pdfId: 'task1' 
+    pdfId: 'task1',
+    pdfUrl: '/pdfs/task1.pdf'
   },
-  { 
-    id: 2, 
-    title: 'Registrierung Schullizenz', 
-    type: 'individual', 
-    lionColor: 'blue', 
+  {
+    id: 2,
+    title: 'Registrierung Schullizenz',
+    type: 'individual',
+    lionColor: 'blue',
     lionEmoji: '🦁',
     subtasks: [
-      'Ich bin bei Fobizz registriert', 
+      'Ich bin bei Fobizz registriert',
       'Ich habe den Pro-Plan in to-teach.ai'
     ],
-    pdfId: 'task2' 
+    pdfId: 'task2',
+    pdfUrl: '/pdfs/task2.pdf'
   },
-  { 
-    id: 3, 
-    title: 'Erste Schritte in to-teach.ai', 
-    type: 'individual', 
-    lionColor: 'green', 
+  {
+    id: 3,
+    title: 'Erste Schritte in to-teach.ai',
+    type: 'individual',
+    lionColor: 'green',
     lionEmoji: '🦁',
     subtasks: [
-      'Ich habe ein Youtube-Aufgabenblatt erstellt', 
-      'Ich habe eine Powerpoint erstellt', 
+      'Ich habe ein Youtube-Aufgabenblatt erstellt',
+      'Ich habe eine Powerpoint erstellt',
       'Ich habe eine Infografik erstellt'
     ],
-    pdfId: 'task3' 
+    pdfId: 'task3',
+    pdfUrl: '/pdfs/task3.pdf'
   },
   {
     id: 4,
@@ -61,30 +64,32 @@ export const TASKS: Task[] = [
     whiteboardUrl: 'https://eduzh-my.sharepoint.com/:f:/g/personal/christof_glaus_dlh_zh_ch/IgAkD-_aI_zYQo9l1XpAE4_6AaR7Hqvf6JSh6lKv9evS6pQ?e=ACThdy',
     pdfId: 'task4'
   },
-  { 
-    id: 5, 
-    title: 'Aufgabenbausteine kennenlernen', 
-    type: 'individual', 
-    lionColor: 'purple', 
+  {
+    id: 5,
+    title: 'Aufgabenbausteine kennenlernen',
+    type: 'individual',
+    lionColor: 'purple',
     lionEmoji: '🦁',
     subtasks: [
-      'Ich habe den Baustein „Aussagen" erstellt', 
-      'Ich habe den Baustein „Mindmap" erstellt', 
+      'Ich habe den Baustein „Aussagen" erstellt',
+      'Ich habe den Baustein „Mindmap" erstellt',
       'Ich habe den Baustein „Whatsapp Chat" erstellt'
     ],
-    pdfId: 'task5' 
+    pdfId: 'task5',
+    pdfUrl: '/pdfs/task5.pdf'
   },
-  { 
-    id: 6, 
-    title: 'Organisation von to-teach.ai-Inhalten', 
-    type: 'individual', 
-    lionColor: 'yellow', 
+  {
+    id: 6,
+    title: 'Organisation von to-teach.ai-Inhalten',
+    type: 'individual',
+    lionColor: 'yellow',
     lionEmoji: '🦁',
     subtasks: [
-      'Ich habe zwei Ordner erstellt', 
+      'Ich habe zwei Ordner erstellt',
       'Ich habe einen Kurs erstellt'
     ],
-    pdfId: 'task6' 
+    pdfId: 'task6',
+    pdfUrl: '/pdfs/task6.pdf'
   },
   {
     id: 7,
