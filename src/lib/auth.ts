@@ -131,13 +131,13 @@ export async function loginParticipantWithCode(code: string): Promise<User> {
     } as User;
   } catch (error: any) {
     console.error('Login error:', error);
-    
-    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+
+    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
       throw new Error('Code nicht gefunden oder ungültig');
     } else if (error.message === 'Code nicht gefunden') {
       throw error;
     } else {
-      throw new Error('Fehler beim Anmelden: ' + error.message);
+      throw new Error('Fehler beim Anmelden: ' + error.code + ' – ' + error.message);
     }
   }
 }
