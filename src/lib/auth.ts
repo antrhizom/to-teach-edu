@@ -1,4 +1,4 @@
-import { auth, db, authReady } from './firebase';
+import { auth, db } from './firebase';
 import { 
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -51,7 +51,6 @@ export async function registerParticipant(
   username: string,
   group: string
 ): Promise<{ code: string; email: string; uid: string }> {
-  await authReady;
   try {
     // 1. Generiere Code (wird als Passwort genutzt)
     const code = generateCode();
@@ -105,7 +104,6 @@ export async function registerParticipant(
  * Sucht virtuelle Email und loggt ein
  */
 export async function loginParticipantWithCode(code: string): Promise<User> {
-  await authReady;
   try {
     // Import Firestore functions
     const { collection, query, where, getDocs } = await import('firebase/firestore');
@@ -153,7 +151,6 @@ export async function loginAdmin(
   email: string,
   password: string
 ): Promise<FirebaseUser> {
-  await authReady;
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
