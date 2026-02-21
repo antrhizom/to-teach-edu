@@ -109,21 +109,31 @@ export async function loginParticipantWithCode(code: string): Promise<User> {
     const { collection, query, where, getDocs } = await import('firebase/firestore');
     
     // 1. Finde User mit diesem Code in Firestore
-    const q = query(
-      collection(db, 'users'), 
-      where('code', '==', code.toUpperCase())
-    );
-    const querySnapshot = await getDocs(q);
-    
+    // Suche mit Original-Code UND uppercase (für alte Kleinbuchstaben-Codes)
+    const codeUpper = code.toUpperCase();
+    const codeLower = code.toLowerCase();
+
+    let querySnapshot = await getDocs(query(
+      collection(db, 'users'),
+      where('code', '==', codeUpper)
+    ));
+
+    if (querySnapshot.empty) {
+      querySnapshot = await getDocs(query(
+        collection(db, 'users'),
+        where('code', '==', codeLower)
+      ));
+    }
+
     if (querySnapshot.empty) {
       throw new Error('Code nicht gefunden');
     }
-    
+
     const userDoc = querySnapshot.docs[0];
     const userData = userDoc.data();
-    
-    // 2. Login mit virtueller Email + Code
-    await signInWithEmailAndPassword(auth, userData.email, code.toUpperCase());
+
+    // 2. Login mit virtueller Email + gespeichertem Code als Passwort
+    await signInWithEmailAndPassword(auth, userData.email, userData.code);
     
     return {
       ...userData,
