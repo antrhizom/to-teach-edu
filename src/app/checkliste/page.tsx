@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { getCurrentUser, getUserData } from '@/lib/auth';
-import { updateUserSubtasks, updateUserRatings } from '@/lib/firestore';
-import { User, TaskRating } from '@/types';
+import { onAuthChange, getUserData } from '@/lib/auth';
+import { updateUserSubtasks, updateUserRatings, getAllPDFs } from '@/lib/firestore';
+import { User, TaskRating, PDFData } from '@/types';
 import { GROUPS, TASKS, RATING_QUESTIONS, RATING_OPTIONS } from '@/lib/constants';
 import Navigation from '@/components/Navigation';
 import { ExternalLink } from 'lucide-react';
@@ -16,23 +16,33 @@ export default function ChecklistePage() {
   const [loading, setLoading] = useState(true);
   const [showRatingModal, setShowRatingModal] = useState<number | null>(null);
   const [tempRating, setTempRating] = useState<Record<string, number>>({});
+  const [pdfs, setPdfs] = useState<Record<string, PDFData>>({});
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const currentUser = getCurrentUser();
-      if (!currentUser) {
+    // onAuthChange wartet auf Firebase-Initialisierung → kein fälschlicher Redirect bei Reload
+    const unsubscribe = onAuthChange(async (firebaseUser) => {
+      if (!firebaseUser) {
         router.push('/login');
         return;
       }
 
-      const userData = await getUserData(currentUser.uid);
+      const userData = await getUserData(firebaseUser.uid);
       if (userData) {
         setUser(userData);
       }
-      setLoading(false);
-    };
 
-    checkAuth();
+      // PDFs aus Firestore laden
+      try {
+        const pdfData = await getAllPDFs();
+        setPdfs(pdfData);
+      } catch (e) {
+        // PDF-Fehler ist nicht kritisch
+      }
+
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, [router]);
 
   const toggleSubtask = async (taskId: number, subtaskIndex: number) => {
@@ -135,12 +145,19 @@ export default function ChecklistePage() {
         {/* Tasks */}
         <div className="space-y-6">
           {TASKS.map((task, idx) => {
-            const taskCompleted = task.subtasks.every((_, i) => 
+            const taskCompleted = task.subtasks.every((_, i) =>
               user.completedSubtasks[`${task.id}-${i}`]
             );
-            const taskSubtasksCompleted = task.subtasks.filter((_, i) => 
+            const taskSubtasksCompleted = task.subtasks.filter((_, i) =>
               user.completedSubtasks[`${task.id}-${i}`]
             ).length;
+
+            // PDF-URL: bevorzuge Firestore-Upload (via pdfId), sonst statische pdfUrl
+            const pdfUrl = (task.pdfId && pdfs[task.pdfId]?.url)
+              ? pdfs[task.pdfId].url
+              : task.pdfUrl;
+
+            const hasLinks = pdfUrl || task.whiteboardUrl || task.padletUrl || task.padletUrlEBA || task.padletUrlEFZ;
 
             return (
               <motion.div
@@ -202,11 +219,11 @@ export default function ChecklistePage() {
                 </div>
 
                 {/* External Links */}
-                {(task.whiteboardUrl || task.padletUrl || task.padletUrlEBA || task.padletUrlEFZ || task.pdfUrl) && (
+                {hasLinks && (
                   <div className="mt-4 pt-4 border-t border-gray-200 flex gap-3 flex-wrap">
-                    {task.pdfUrl && (
+                    {pdfUrl && (
                       <a
-                        href={task.pdfUrl}
+                        href={pdfUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors"
