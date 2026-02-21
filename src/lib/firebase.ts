@@ -1,7 +1,7 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
-import { getAuth, setPersistence, browserLocalPersistence } from 'firebase/auth';
+import { getAuth, setPersistence, browserLocalPersistence, inMemoryPersistence } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyACZvcT_03XaWKP0qKrZFZoIKILx5-lZps",
@@ -16,11 +16,16 @@ const firebaseConfig = {
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const db = getFirestore(app);
 const storage = getStorage(app);
+
+// Auth mit korrekter Persistenz initialisieren
+// SSR: inMemory (kein localStorage verfügbar)
+// Browser: browserLocalPersistence (bleibt nach Browser-Neustart erhalten)
 const auth = getAuth(app);
 
-// Set auth persistence to LOCAL (bleibt eingeloggt auch nach Browser-Neustart)
-setPersistence(auth, browserLocalPersistence).catch((error) => {
-  console.error('Auth persistence error:', error);
-});
+export const authReady: Promise<void> = typeof window !== 'undefined'
+  ? setPersistence(auth, browserLocalPersistence).catch((error) => {
+      console.error('Auth persistence error:', error);
+    })
+  : setPersistence(auth, inMemoryPersistence).catch(() => {});
 
 export { app, db, storage, auth };

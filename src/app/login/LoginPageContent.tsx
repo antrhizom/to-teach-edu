@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { LogIn, UserPlus, Shield, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { registerParticipant, loginParticipantWithCode, loginAdmin } from '@/lib/auth';
+import { registerParticipant, loginParticipantWithCode, loginAdmin, onAuthChange, checkIsAdmin } from '@/lib/auth';
 import { GROUPS } from '@/lib/constants';
 
 export default function LoginPage() {
@@ -16,6 +16,21 @@ export default function LoginPage() {
   const [mode, setMode] = useState<'register' | 'login' | 'admin'>(
     isAdminMode ? 'admin' : 'register'
   );
+
+  // Weiterleitung wenn bereits eingeloggt
+  useEffect(() => {
+    const unsubscribe = onAuthChange(async (firebaseUser) => {
+      if (firebaseUser) {
+        const adminStatus = await checkIsAdmin();
+        if (adminStatus) {
+          router.push('/admin');
+        } else {
+          router.push('/checkliste');
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, [router]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [newUserCode, setNewUserCode] = useState('');
