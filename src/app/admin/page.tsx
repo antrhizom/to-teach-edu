@@ -35,8 +35,13 @@ export default function AdminPage() {
       }
 
       setIsAdmin(true);
-      const users = await getAllUsers();
-      setAllUsers(users);
+      try {
+        const users = await getAllUsers();
+        setAllUsers(users);
+      } catch (err) {
+        console.error('Fehler beim Laden der Users:', err);
+        alert('Fehler beim Laden der Benutzerdaten: ' + (err as any).message);
+      }
       setLoading(false);
     });
 
