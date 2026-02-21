@@ -53,6 +53,19 @@ export const TASKS: Task[] = [
   },
   {
     id: 4,
+    title: 'Unterrichtsvorbereitung mit to-teach.ai',
+    type: 'individual',
+    lionColor: 'cyan',
+    lionEmoji: '🦁',
+    subtasks: [
+      'Ich habe einen Unterrichtsentwurf mit to-teach.ai erstellt',
+      'Ich habe den Entwurf angepasst und verfeinert'
+    ],
+    pdfId: 'task4',
+    pdfUrl: '/pdfs/task4.pdf'
+  },
+  {
+    id: 5,
     title: 'Gruppenarbeit A',
     type: 'group',
     lionColor: 'orange',
@@ -62,10 +75,10 @@ export const TASKS: Task[] = [
       'Einzellinks sind in der Ablage festgehalten'
     ],
     whiteboardUrl: 'https://eduzh-my.sharepoint.com/:f:/g/personal/christof_glaus_dlh_zh_ch/IgAkD-_aI_zYQo9l1XpAE4_6AaR7Hqvf6JSh6lKv9evS6pQ?e=ACThdy',
-    pdfId: 'task4'
+    pdfId: 'task5'
   },
   {
-    id: 5,
+    id: 6,
     title: 'Aufgabenbausteine kennenlernen',
     type: 'individual',
     lionColor: 'purple',
@@ -75,11 +88,11 @@ export const TASKS: Task[] = [
       'Ich habe den Baustein „Mindmap" erstellt',
       'Ich habe den Baustein „Whatsapp Chat" erstellt'
     ],
-    pdfId: 'task5',
-    pdfUrl: '/pdfs/task5.pdf'
+    pdfId: 'task6',
+    pdfUrl: '/pdfs/task6.pdf'
   },
   {
-    id: 6,
+    id: 7,
     title: 'Organisation von to-teach.ai-Inhalten',
     type: 'individual',
     lionColor: 'yellow',
@@ -88,11 +101,11 @@ export const TASKS: Task[] = [
       'Ich habe zwei Ordner erstellt',
       'Ich habe einen Kurs erstellt'
     ],
-    pdfId: 'task6',
-    pdfUrl: '/pdfs/task6.pdf'
+    pdfId: 'task7',
+    pdfUrl: '/pdfs/task7.pdf'
   },
   {
-    id: 7,
+    id: 8,
     title: 'Gruppenarbeit B',
     type: 'group',
     lionColor: 'teal',
@@ -102,21 +115,21 @@ export const TASKS: Task[] = [
       'Einzellinks sind in der Ablage festgehalten'
     ],
     whiteboardUrl: 'https://eduzh-my.sharepoint.com/:f:/g/personal/christof_glaus_dlh_zh_ch/IgAkD-_aI_zYQo9l1XpAE4_6AaR7Hqvf6JSh6lKv9evS6pQ?e=ACThdy',
-    pdfId: 'task7'
+    pdfId: 'task8'
   },
-  { 
-    id: 8, 
-    title: 'Gruppenarbeit C', 
-    type: 'group', 
-    lionColor: 'pink', 
+  {
+    id: 9,
+    title: 'Gruppenarbeit C',
+    type: 'group',
+    lionColor: 'pink',
     lionEmoji: '👥',
     subtasks: [
-      'Entscheid in der Gruppe, welche Links auf das Padlet kommen', 
+      'Entscheid in der Gruppe, welche Links auf das Padlet kommen',
       'Mindestens fünf Links mit Begründung'
     ],
     padletUrlEBA: 'https://padlet.com/DLHOrganisation/unsere-to-teach-wand-eba-rnt6ksnune532gbl',
     padletUrlEFZ: 'https://padlet.com/DLHOrganisation/unsere-to-teach-wand-efz-y1dnbn9a2todhlo1',
-    pdfId: 'task8' 
+    pdfId: 'task9'
   }
 ];
 
