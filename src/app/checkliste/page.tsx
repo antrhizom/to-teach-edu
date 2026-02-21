@@ -246,7 +246,7 @@ export default function ChecklistePage() {
                         <div className="w-full mt-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-start gap-2">
                           <span className="text-base leading-none mt-0.5">ℹ️</span>
                           <span>
-                            <strong>Ablage-Hinweis:</strong> Bitte keine Ordner erstellen – Dateien mit beschreibendem Titel speichern (z.B. «Vorname_Aufgabe3_Link»). Links können ebenfalls direkt im Ordner abgelegt werden.
+                            <strong>Ablage-Hinweis:</strong> Bitte keine Ordner erstellen – Dateien und Links mit beschreibendem Titel ablegen. Schema: <em>tiername-to-teach-themenbereich-aufgabeninhalt</em> (z.B. «nilpferd-to-teach-chatbot-microsoftlink»).
                           </span>
                         </div>
                       </>
