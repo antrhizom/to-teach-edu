@@ -48,17 +48,18 @@ export const TASKS: Task[] = [
     ],
     pdfId: 'task3' 
   },
-  { 
-    id: 4, 
-    title: 'Gruppenarbeit A', 
-    type: 'group', 
-    lionColor: 'orange', 
+  {
+    id: 4,
+    title: 'Gruppenarbeit A',
+    type: 'group',
+    lionColor: 'orange',
     lionEmoji: '👥',
     subtasks: [
-      'Zwischenstandkontrolle in der Gruppe', 
-      'Einzellinks sind auf dem Whiteboard festgehalten'
+      'Zwischenstandkontrolle in der Gruppe',
+      'Einzellinks sind in der Ablage festgehalten'
     ],
-    whiteboardUrl: 'https://example.com/whiteboard-a'
+    whiteboardUrl: 'https://eduzh-my.sharepoint.com/:f:/g/personal/christof_glaus_dlh_zh_ch/IgAkD-_aI_zYQo9l1XpAE4_6AaR7Hqvf6JSh6lKv9evS6pQ?e=ACThdy',
+    pdfId: 'task4'
   },
   { 
     id: 5, 
@@ -85,17 +86,18 @@ export const TASKS: Task[] = [
     ],
     pdfId: 'task6' 
   },
-  { 
-    id: 7, 
-    title: 'Gruppenarbeit B', 
-    type: 'group', 
-    lionColor: 'teal', 
+  {
+    id: 7,
+    title: 'Gruppenarbeit B',
+    type: 'group',
+    lionColor: 'teal',
     lionEmoji: '👥',
     subtasks: [
-      'Zwischenstandkontrolle in der Gruppe', 
-      'Einzellinks sind auf dem Whiteboard festgehalten'
+      'Zwischenstandkontrolle in der Gruppe',
+      'Einzellinks sind in der Ablage festgehalten'
     ],
-    whiteboardUrl: 'https://example.com/whiteboard-b'
+    whiteboardUrl: 'https://eduzh-my.sharepoint.com/:f:/g/personal/christof_glaus_dlh_zh_ch/IgAkD-_aI_zYQo9l1XpAE4_6AaR7Hqvf6JSh6lKv9evS6pQ?e=ACThdy',
+    pdfId: 'task7'
   },
   { 
     id: 8, 
@@ -107,8 +109,9 @@ export const TASKS: Task[] = [
       'Entscheid in der Gruppe, welche Links auf das Padlet kommen', 
       'Mindestens fünf Links mit Begründung'
     ],
-    padletUrlEFZ3: 'https://padlet.com/DLHOrganisation/unsere-to-teach-wand-eba-rnt6ksnune532gbl',
-    padletUrlEFZ4: 'https://padlet.com/DLHOrganisation/unsere-to-teach-wand-efz-y1dnbn9a2todhlo1'
+    padletUrlEBA: 'https://padlet.com/DLHOrganisation/unsere-to-teach-wand-eba-rnt6ksnune532gbl',
+    padletUrlEFZ: 'https://padlet.com/DLHOrganisation/unsere-to-teach-wand-efz-y1dnbn9a2todhlo1',
+    pdfId: 'task8' 
   }
 ];
 

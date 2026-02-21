@@ -3,9 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import { getUserData } from '@/lib/auth';
+import { getCurrentUser, getUserData } from '@/lib/auth';
 import { updateUserSubtasks, updateUserRatings } from '@/lib/firestore';
 import { User, TaskRating } from '@/types';
 import { GROUPS, TASKS, RATING_QUESTIONS, RATING_OPTIONS } from '@/lib/constants';
@@ -20,22 +18,21 @@ export default function ChecklistePage() {
   const [tempRating, setTempRating] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    // Auth State Listener - wartet auf Firebase Auth Initialisierung
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (!firebaseUser) {
+    const checkAuth = async () => {
+      const currentUser = getCurrentUser();
+      if (!currentUser) {
         router.push('/login');
-        setLoading(false);
         return;
       }
 
-      const userData = await getUserData(firebaseUser.uid);
+      const userData = await getUserData(currentUser.uid);
       if (userData) {
         setUser(userData);
       }
       setLoading(false);
-    });
+    };
 
-    return () => unsubscribe();
+    checkAuth();
   }, [router]);
 
   const toggleSubtask = async (taskId: number, subtaskIndex: number) => {
@@ -205,11 +202,11 @@ export default function ChecklistePage() {
                 </div>
 
                 {/* External Links */}
-                {(task.whiteboardUrl || task.padletUrl || task.padletUrlEFZ3 || task.padletUrlEFZ4 || task.pdfUrl || task.pdfId) && (
+                {(task.whiteboardUrl || task.padletUrl || task.padletUrlEBA || task.padletUrlEFZ || task.pdfUrl) && (
                   <div className="mt-4 pt-4 border-t border-gray-200 flex gap-3 flex-wrap">
-                    {(task.pdfUrl || task.pdfId) && (
+                    {task.pdfUrl && (
                       <a
-                        href={task.pdfUrl || `/pdfs/${task.pdfId}.pdf`}
+                        href={task.pdfUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors"
@@ -219,15 +216,23 @@ export default function ChecklistePage() {
                       </a>
                     )}
                     {task.whiteboardUrl && (
-                      <a
-                        href={task.whiteboardUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                        Whiteboard
-                      </a>
+                      <>
+                        <a
+                          href={task.whiteboardUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                          📁 Ablage bzz
+                        </a>
+                        <div className="w-full mt-1 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-start gap-2">
+                          <span className="text-base leading-none mt-0.5">ℹ️</span>
+                          <span>
+                            <strong>Ablage-Hinweis:</strong> Bitte keine Ordner erstellen – Dateien mit beschreibendem Titel speichern (z.B. «Vorname_Aufgabe3_Link»). Links können ebenfalls direkt im Ordner abgelegt werden.
+                          </span>
+                        </div>
+                      </>
                     )}
                     {task.padletUrl && (
                       <a
@@ -240,26 +245,26 @@ export default function ChecklistePage() {
                         Padlet
                       </a>
                     )}
-                    {task.padletUrlEFZ3 && (
+                    {task.padletUrlEBA && (
                       <a
-                        href={task.padletUrlEFZ3}
+                        href={task.padletUrlEBA}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-colors"
                       >
                         <ExternalLink className="w-4 h-4" />
-                        EFZ 3-jährig
+                        Padlet EBA
                       </a>
                     )}
-                    {task.padletUrlEFZ4 && (
+                    {task.padletUrlEFZ && (
                       <a
-                        href={task.padletUrlEFZ4}
+                        href={task.padletUrlEFZ}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors"
                       >
                         <ExternalLink className="w-4 h-4" />
-                        EFZ 4-jährig
+                        Padlet EFZ
                       </a>
                     )}
                   </div>
