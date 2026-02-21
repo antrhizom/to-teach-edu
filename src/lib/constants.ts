@@ -134,12 +134,7 @@ export const RATING_OPTIONS: RatingOption[] = [
 ];
 
 export const generateCode = (): string => {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let code = '';
-  for (let i = 0; i < 6; i++) {
-    code += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return code;
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
 };
 
 export const getSubtaskKey = (taskId: number, subtaskIndex: number): string => {

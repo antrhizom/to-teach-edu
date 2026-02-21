@@ -48,7 +48,7 @@ export async function isAdmin(user: FirebaseUser): Promise<boolean> {
  * Erstellt virtuellen Auth-User im Hintergrund
  */
 export async function registerParticipant(
-  username: string,
+  username: string, 
   group: string
 ): Promise<{ code: string; email: string; uid: string }> {
   try {
@@ -109,31 +109,21 @@ export async function loginParticipantWithCode(code: string): Promise<User> {
     const { collection, query, where, getDocs } = await import('firebase/firestore');
     
     // 1. Finde User mit diesem Code in Firestore
-    // Suche mit Original-Code UND uppercase (für alte Kleinbuchstaben-Codes)
-    const codeUpper = code.toUpperCase();
-    const codeLower = code.toLowerCase();
-
-    let querySnapshot = await getDocs(query(
-      collection(db, 'users'),
-      where('code', '==', codeUpper)
-    ));
-
-    if (querySnapshot.empty) {
-      querySnapshot = await getDocs(query(
-        collection(db, 'users'),
-        where('code', '==', codeLower)
-      ));
-    }
-
+    const q = query(
+      collection(db, 'users'), 
+      where('code', '==', code.toUpperCase())
+    );
+    const querySnapshot = await getDocs(q);
+    
     if (querySnapshot.empty) {
       throw new Error('Code nicht gefunden');
     }
-
+    
     const userDoc = querySnapshot.docs[0];
     const userData = userDoc.data();
-
-    // 2. Login mit virtueller Email + gespeichertem Code als Passwort
-    await signInWithEmailAndPassword(auth, userData.email, userData.code);
+    
+    // 2. Login mit virtueller Email + Code
+    await signInWithEmailAndPassword(auth, userData.email, code.toUpperCase());
     
     return {
       ...userData,
@@ -141,13 +131,13 @@ export async function loginParticipantWithCode(code: string): Promise<User> {
     } as User;
   } catch (error: any) {
     console.error('Login error:', error);
-
-    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+    
+    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
       throw new Error('Code nicht gefunden oder ungültig');
     } else if (error.message === 'Code nicht gefunden') {
       throw error;
     } else {
-      throw new Error('Fehler beim Anmelden: ' + error.code + ' – ' + error.message);
+      throw new Error('Fehler beim Anmelden: ' + error.message);
     }
   }
 }
@@ -158,7 +148,7 @@ export async function loginParticipantWithCode(code: string): Promise<User> {
  * Login für Admin mit Email/Passwort
  */
 export async function loginAdmin(
-  email: string,
+  email: string, 
   password: string
 ): Promise<FirebaseUser> {
   try {
