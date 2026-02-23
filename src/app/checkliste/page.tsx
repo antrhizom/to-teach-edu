@@ -270,7 +270,7 @@ export default function ChecklistePage() {
                         className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-colors"
                       >
                         <ExternalLink className="w-4 h-4" />
-                        Padlet EBA
+                        Padlet 3jEFZ
                       </a>
                     )}
                     {task.padletUrlEFZ && (
@@ -281,7 +281,7 @@ export default function ChecklistePage() {
                         className="flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors"
                       >
                         <ExternalLink className="w-4 h-4" />
-                        Padlet EFZ
+                        Padlet 4jEFZ
                       </a>
                     )}
                   </div>
