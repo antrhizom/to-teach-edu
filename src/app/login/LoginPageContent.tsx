@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { LogIn, UserPlus, Shield, ArrowLeft } from 'lucide-react';
@@ -17,10 +17,17 @@ export default function LoginPage() {
     isAdminMode ? 'admin' : 'register'
   );
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [newUserCode, setNewUserCode] = useState('');
+  const [copied, setCopied] = useState(false);
+  const [codeNoted, setCodeNoted] = useState(false);
+  const isRegisteringRef = useRef(false);
+
   // Weiterleitung wenn bereits eingeloggt (aber NICHT nach frischer Registrierung)
   useEffect(() => {
     const unsubscribe = onAuthChange(async (firebaseUser) => {
-      if (firebaseUser && !newUserCode) {
+      if (firebaseUser && !newUserCode && !isRegisteringRef.current) {
         const adminStatus = await checkIsAdmin();
         if (adminStatus) {
           router.push('/admin');
@@ -31,11 +38,6 @@ export default function LoginPage() {
     });
     return () => unsubscribe();
   }, [router, newUserCode]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [newUserCode, setNewUserCode] = useState('');
-  const [copied, setCopied] = useState(false);
-  const [codeNoted, setCodeNoted] = useState(false);
 
   // Register Form
   const [username, setUsername] = useState('');
@@ -54,6 +56,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
+      isRegisteringRef.current = true;
       const { code } = await registerParticipant(username, selectedGroup);
       setNewUserCode(code);
     } catch (err: any) {
