@@ -34,6 +34,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [newUserCode, setNewUserCode] = useState('');
+  const [copied, setCopied] = useState(false);
+  const [codeNoted, setCodeNoted] = useState(false);
 
   // Register Form
   const [username, setUsername] = useState('');
@@ -103,16 +105,49 @@ export default function LoginPage() {
             <UserPlus className="w-10 h-10 text-green-600" />
           </div>
           <h1 className="text-3xl font-bold mb-4">Account erstellt! 🎉</h1>
-          <p className="text-gray-600 mb-6">Dein persönlicher Code:</p>
-          <div className="bg-gradient-to-br from-primary-50 to-accent-50 border-4 border-dashed border-primary-300 rounded-2xl p-6 mb-8">
-            <div className="text-5xl font-mono font-bold text-primary-600 tracking-wider">
+          <p className="text-gray-600 mb-6">Dein persönlicher Zugangscode:</p>
+          <div className="bg-gradient-to-br from-primary-50 to-accent-50 border-4 border-dashed border-primary-300 rounded-2xl p-6 mb-4">
+            <div
+              className="text-5xl font-mono font-bold text-primary-600 tracking-wider select-all cursor-text"
+              onClick={(e) => {
+                const range = document.createRange();
+                range.selectNodeContents(e.currentTarget);
+                const sel = window.getSelection();
+                sel?.removeAllRanges();
+                sel?.addRange(range);
+              }}
+            >
               {newUserCode}
             </div>
-            <p className="text-sm text-gray-600 mt-2">Notiere dir diesen Code!</p>
+            <button
+              type="button"
+              onClick={() => {
+                navigator.clipboard.writeText(newUserCode);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2500);
+              }}
+              className="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-white border-2 border-primary-300 rounded-lg text-sm font-semibold text-primary-700 hover:bg-primary-50 transition-colors"
+            >
+              {copied ? '✅ Kopiert!' : '📋 Code kopieren'}
+            </button>
           </div>
+          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-left">
+            <p className="text-sm font-semibold text-amber-800 mb-1">Wichtig:</p>
+            <p className="text-sm text-amber-700">Diesen Code brauchst du bei jeder Anmeldung. Notiere oder kopiere ihn jetzt!</p>
+          </div>
+          <label className="flex items-start gap-3 mb-6 cursor-pointer text-left">
+            <input
+              type="checkbox"
+              checked={codeNoted}
+              onChange={(e) => setCodeNoted(e.target.checked)}
+              className="mt-0.5 w-5 h-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+            />
+            <span className="text-sm text-gray-700">Ich habe meinen Code notiert oder kopiert.</span>
+          </label>
           <button
             onClick={() => router.push('/checkliste')}
-            className="w-full bg-primary-600 text-white py-4 rounded-xl font-semibold hover:bg-primary-700 transition-colors"
+            disabled={!codeNoted}
+            className="w-full bg-primary-600 text-white py-4 rounded-xl font-semibold hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
           >
             Zur Checkliste
           </button>
@@ -191,6 +226,11 @@ export default function LoginPage() {
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none transition-colors"
                   placeholder="Max Mustermann"
                 />
+                <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <p className="text-sm text-blue-800">
+                    <strong>Hinweis:</strong> Dieser Name wird auf deinem Zertifikat eingetragen. Bitte Vor- und Nachname angeben.
+                  </p>
+                </div>
               </div>
 
               <div>
