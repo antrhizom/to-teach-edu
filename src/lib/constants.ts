@@ -86,8 +86,7 @@ export const TASKS: Task[] = [
     subtasks: [
       'Ich habe den Baustein „Aussagen" erstellt',
       'Ich habe den Baustein „Mindmap" erstellt',
-      'Ich habe den Baustein „Whatsapp Chat" erstellt',
-      'Ich habe ein Aufgabenblatt erstellt'
+      'Ich habe den Baustein „Whatsapp Chat" erstellt'
     ],
     pdfId: 'task6',
     pdfUrl: '/pdfs/task6.pdf'
