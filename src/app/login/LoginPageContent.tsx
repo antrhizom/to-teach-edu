@@ -17,10 +17,10 @@ export default function LoginPage() {
     isAdminMode ? 'admin' : 'register'
   );
 
-  // Weiterleitung wenn bereits eingeloggt
+  // Weiterleitung wenn bereits eingeloggt (aber NICHT nach frischer Registrierung)
   useEffect(() => {
     const unsubscribe = onAuthChange(async (firebaseUser) => {
-      if (firebaseUser) {
+      if (firebaseUser && !newUserCode) {
         const adminStatus = await checkIsAdmin();
         if (adminStatus) {
           router.push('/admin');
@@ -30,7 +30,7 @@ export default function LoginPage() {
       }
     });
     return () => unsubscribe();
-  }, [router]);
+  }, [router, newUserCode]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [newUserCode, setNewUserCode] = useState('');
