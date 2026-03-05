@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { checkIsAdmin } from '@/lib/auth';
+import { checkIsAdmin, logout } from '@/lib/auth';
 import { getAllUsers, deleteUser, resetUserProgress, exportAllData } from '@/lib/firestore';
 import { User } from '@/types';
 import { GROUPS, TASKS, RATING_QUESTIONS, RATING_OPTIONS } from '@/lib/constants';
@@ -27,21 +27,23 @@ export default function AdminPage() {
         return;
       }
 
-      const adminStatus = await checkIsAdmin();
-      if (!adminStatus) {
-        alert('Keine Admin-Berechtigung!');
-        router.push('/');
-        setLoading(false);
-        return;
-      }
-
-      setIsAdmin(true);
       try {
+        const adminStatus = await checkIsAdmin();
+        if (!adminStatus) {
+          await logout();
+          router.push('/login?mode=admin');
+          return;
+        }
+
+        setIsAdmin(true);
         const users = await getAllUsers();
         setAllUsers(users);
       } catch (err) {
-        console.error('Fehler beim Laden der Users:', err);
-        alert('Fehler beim Laden der Benutzerdaten: ' + (err as any).message);
+        console.error('Admin page error:', err);
+        // Abgelaufene Session oder Firestore-Fehler → Ausloggen und zum Login
+        await logout();
+        router.push('/login?mode=admin');
+        return;
       }
       setLoading(false);
     });
