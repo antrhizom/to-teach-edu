@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { onAuthChange, getUserData } from '@/lib/auth';
+import { onAuthChange, getUserData, logout } from '@/lib/auth';
 import { updateUserSubtasks, updateUserRatings, getAllPDFs } from '@/lib/firestore';
 import { User, TaskRating, PDFData } from '@/types';
 import { GROUPS, TASKS, RATING_QUESTIONS, RATING_OPTIONS } from '@/lib/constants';
@@ -26,9 +26,22 @@ export default function ChecklistePage() {
         return;
       }
 
-      const userData = await getUserData(firebaseUser.uid);
-      if (userData) {
-        setUser(userData);
+      try {
+        const userData = await getUserData(firebaseUser.uid);
+        if (userData) {
+          setUser(userData);
+        } else {
+          // User-Dokument nicht gefunden → Ausloggen und zum Login
+          await logout();
+          router.push('/login');
+          return;
+        }
+      } catch (e) {
+        console.error('Error loading user data:', e);
+        // Abgelaufene Session oder Firestore-Fehler → Ausloggen und zum Login
+        await logout();
+        router.push('/login');
+        return;
       }
 
       // PDFs aus Firestore laden
@@ -103,7 +116,10 @@ export default function ChecklistePage() {
     );
   }
 
-  if (!user) return null;
+  if (!user) {
+    router.push('/login');
+    return null;
+  }
 
   const groupInfo = GROUPS[user.group as keyof typeof GROUPS];
   const totalSubtasks = TASKS.reduce((acc, task) => acc + task.subtasks.length, 0);
